@@ -1,0 +1,92 @@
+type: collection.insomnia.rest/5.0
+name: Profesor
+meta:
+  id: wrk_e3c073d0e6a54716a3de23d94983a9d7
+  created: 1755270919040
+  modified: 1755270919040
+  description: ""
+collection:
+  - name: profesor
+    meta:
+      id: fld_2913fa1d353e4697ac141381a9edf59a
+      created: 1755271479088
+      modified: 1755271479088
+      sortKey: -1755271479088
+      description: ""
+    children:
+      - url: http://localhost:8000/profesor
+        name: obtener todos los profesores
+        meta:
+          id: req_afb2694c611c43d89ab81e223acbadcb
+          created: 1755271481618
+          modified: 1755274330831
+          isPrivate: false
+          description: ""
+          sortKey: -1755271481618
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8000/profesor/1
+        name: eliminar profesor
+        meta:
+          id: req_23866a6035ac48789654d6fb0b6e0df8
+          created: 1755274332221
+          modified: 1755274873587
+          isPrivate: false
+          description: ""
+          sortKey: -1755274332221
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8000/profesor/1
+        name: obtener profesor por ID
+        meta:
+          id: req_d302efc056884724a9b53620793beb41
+          created: 1755274373503
+          modified: 1755274887357
+          isPrivate: false
+          description: ""
+          sortKey: -1755274373503
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.4.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_46d60ab0884c348e018847cd519222925444ffd0
+    created: 1755270919049
+    modified: 1755270919049
+environments:
+  name: Base Environment
+  meta:
+    id: env_46d60ab0884c348e018847cd519222925444ffd0
+    created: 1755270919045
+    modified: 1755270919045
+    isPrivate: false
