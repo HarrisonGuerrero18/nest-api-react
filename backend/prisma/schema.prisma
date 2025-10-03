@@ -14,32 +14,195 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model marcas{
-  id Int @id @default(autoincrement())
-  nombre String 
-  carros carros []
+enum TipoDocumentoUsuario{
+  ti
+  cc
+  ce
 }
 
-model carros{
-  id Int @id @default(autoincrement())
-  modelo String 
-  fecha_fabricacion DateTime
-  disponibilidad Boolean @default(true)
-  precio Decimal 
-  //atributo de relacion
-  marca_id Int
-  marca marcas @relation(fields: [marca_id], references: [id])
+enum RolUsuario {
+  administrador
+  coordinador
+  docente
+  estudiante
 }
 
-model cursos{
-  id Int @id @default(autoincrement())
-  nombre String 
-  descripcion String 
-  precio Decimal 
+enum EstadoCuentaUsuario {
+  activo
+  inactivo
+  suspendido
+  eliminado
 }
 
-model alumnos{
-  id Int @id @default(autoincrement())
-  nombre String 
-  apellido String
+model Usuario {
+  usuario_id        String               @id @default(uuid())
+  correo_institucional String?           @unique 
+  username          String?              @unique 
+  nombres           String               
+  apellidos         String               
+  tipo_documento    TipoDocumentoUsuario
+  numero_documento  String               
+  rol               RolUsuario
+  password_hash     String               
+  estado_cuenta     EstadoCuentaUsuario  @default(activo)
+  fecha_creacion    DateTime             @default(now()) 
+  ultimo_acceso      DateTime            @default(now())
+  perfil_url        String?              
+  portada_url       String?              
+  telefono          String?              @unique 
+  descripcion       String?              
+  administrador_sistema AdministradorSistema?
+  docente Docente?
+  coordinador Coordinador?
+  estudiante Estudiante?
+}
+
+model AdministradorSistema{
+  administrador_id String @id 
+  usuario          Usuario @relation(fields: [administrador_id], references: [usuario_id], onDelete: Cascade)
+  
+  instituciones Institucion[]
+}
+
+enum TipoVinculacion{
+  planta
+  catedra
+  ocasional
+  visitante
+  honorario
+}
+
+model Docente{
+  docente_id        String @id 
+  area_conocimiento String               
+  fecha_vinculacion DateTime             
+  tipo_vinculacion  TipoVinculacion      @default(planta)
+  titulo_academico  String?              
+  horas_semanales   Int?                 
+  usuario          Usuario @relation(fields: [docente_id], references: [usuario_id], onDelete: Cascade)
+}
+
+enum TipoInstitucion {
+  escuela
+  colegio
+  instituto
+  universidad
+  politecnico
+  centro_de_formacion
+  corporacion
+  fundacion
+  academia
+}
+
+enum NivelEducativoInstitucion {
+  basica
+  media
+  tecnica
+  tecnologica
+  superior
+}
+
+enum SectorInstitucion {
+  publico
+  privado
+}
+
+enum EstadoInstitucion {
+  pendiente
+  activa
+  inactiva
+}
+
+model Institucion {
+  institucion_id    String               @id 
+  administrador_id_creador String?                 
+  nombre            String               @unique
+  sigla             String?              @unique
+  lema              String?
+  tipo_institucion  TipoInstitucion
+  usa_programas     Boolean
+  nivel_educativo   NivelEducativoInstitucion
+  sector            SectorInstitucion
+  direccion         String?
+  ciudad            String?
+  pais              String
+  correo_institucional String            @unique
+  telefono          String
+  nit               String?              @unique
+  estado            EstadoInstitucion    @default(pendiente)
+  fecha_creacion    DateTime             @default(now())
+  fecha_activacion  DateTime?
+
+  administrador     AdministradorSistema? @relation(fields: [administrador_id_creador], references: [administrador_id], onDelete: SetNull)
+  programas         Programa[]
+}
+
+model Coordinador {
+  coordinador_id    String @id 
+  horario_atencion  String?              
+  fecha_inicio_carrera DateTime          
+  usuario Usuario @relation(fields: [coordinador_id], references: [usuario_id], onDelete: Cascade)
+}
+
+enum nivel_programa {
+  basico
+  media
+  tecnico
+  tecnologico
+  profesional
+  especializacion
+  maestria
+  doctorado
+  otro
+}
+
+enum tipo_programa {
+  presencial
+  virtual
+  mixto
+  a_distancia
+  dual
+  por_ciclos
+  continuo
+  otro
+}
+
+model Programa {
+  programa_id   String      @id 
+  institucion_id String     
+  nombre        String      
+  descripcion   String?     
+  nivel         nivel_programa
+  tipo          tipo_programa
+  
+  institucion   Institucion @relation(fields: [institucion_id], references: [institucion_id], onDelete: Cascade)
+  estudiantes   Estudiante[]
+  @@unique([institucion_id, nombre], name: "uq_programa_nombre")
+}
+
+enum etapa_formativa_estudiante {
+  i
+  ii
+  iii
+  iv
+  v
+  vi
+  vii
+  viii
+  ix
+  x
+  xi
+  xii
+}
+
+model Estudiante {
+  estudiante_id     String                       @id 
+  programa_id       String?                      
+  fecha_ingreso     DateTime                     
+  creditos_aprobados Int?                        
+  etapa_formativa   etapa_formativa_estudiante   @default(i)
+  promedio_acumulado Decimal?                    
+
+  usuario   Usuario   @relation(fields: [estudiante_id], references: [usuario_id], onDelete: Cascade)
+  programa  Programa? @relation(fields: [programa_id], references: [programa_id], onDelete: SetNull)
 }
