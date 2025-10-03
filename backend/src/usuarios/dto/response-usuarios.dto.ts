@@ -1,4 +1,5 @@
-import { Expose, Transform } from 'class-transformer'
+import { Expose } from 'class-transformer'
+import { RolUsuario, EstadoCuentaUsuario } from 'generated/prisma';
 
 export class ResponseUsuarioDto {
   @Expose()
@@ -11,13 +12,20 @@ export class ResponseUsuarioDto {
   apellidos: string;
 
   @Expose()
-  correoInstitucional: string;
+  tipo_documento: string;
 
   @Expose()
-  @Transform(({ value }) => value ? value.toISOString() : null)
-  fecha_creacion: Date;
+  numero_documento: string;
 
   @Expose()
-  @Transform(({ value }) => value ? value.toISOString() : null)
+  rol: RolUsuario;
+
+  @Expose()
+  estado: EstadoCuentaUsuario;
+
+  @Expose()
+  telefono: string;
+
+  @Expose()
   ultimoAcceso: Date;
 }

@@ -1,23 +1,23 @@
 import { TipoDocumentoUsuario, RolUsuario, EstadoCuentaUsuario } from "generated/prisma";
 
-export class Usuarios {
+export class Usuario {
     constructor(
-        private _usuario_id: String,
-        private _correo_institucional: String,
-        private _username: String, 
-        private _nombres: String,
-        private _apellidos: String,
+        private _usuario_id: string,
+        private _correo_institucional: string,
+        private _username: string, 
+        private _nombres: string,
+        private _apellidos: string,
         private _tipo_documento: TipoDocumentoUsuario,
-        private _numero_documento: String,
+        private _numero_documento: string,
         private _rol: RolUsuario,
-        private _password_hash: String,
+        private _password_hash: string,
         private _estado_cuenta: EstadoCuentaUsuario,
         private _fecha_creacion: Date,
         private _ultimo_acceso: Date,
-        private _perfil_url: String,
-        private _portada_url: String,
-        private _telefono: String,
-        private _descripcion: String
+        private _perfil_url: string,
+        private _portada_url: string,
+        private _telefono: string,
+        private _descripcion: string
     ){}
 
     public get usuario_id (){

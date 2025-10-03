@@ -1,61 +1,79 @@
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Usuarios } from './entities/usuarios.entity';
 import { Injectable } from '@nestjs/common';
-import { CreateUsuariosDto } from './dto/create-usuarios.dto';
-import { UpdateUsuariosDto } from './dto/update-usuarios.dto';
+import { CreateUsuarioDto } from './dto/create-usuario.dto';
+import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { ResponseUsuarioDto } from './dto/response-usuarios.dto';
 import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsuariosService {
 
-  private usuarios: Usuarios[] = []
+  constructor(private prismaService: PrismaService) { }
 
-  constructor(private prismaService: PrismaService) {
-
-  }
-
-  async create(createUsuariosDto: CreateUsuariosDto): Promise<ResponseUsuarioDto> {
+  async create(createUsuarioDto: CreateUsuarioDto): Promise<ResponseUsuarioDto> {
     const usuario = await this.prismaService.usuario.create({
       data: {
-        correo_institucional: createUsuariosDto.correo_institucional,
-        username: createUsuariosDto.username,
-        nombres: createUsuariosDto.nombres,
-        apellidos: createUsuariosDto.apellidos,
-        tipo_documento: createUsuariosDto.tipo_documento,
-        numero_documento: createUsuariosDto.numero_documento,
-        rol: createUsuariosDto.rol,
-        password_hash: createUsuariosDto.password_hash,
-        estado_cuenta: createUsuariosDto.estado_cuenta,
-        perfil_url: createUsuariosDto.perfil_url,
-        portada_url: createUsuariosDto.portada_url,
-        telefono: createUsuariosDto.telefono,
-        descripcion: createUsuariosDto.descripcion,
+        usuario_id: createUsuarioDto.usuario_id,
+        correo_institucional: createUsuarioDto.correo_institucional,
+        username: createUsuarioDto.username,
+        nombres: createUsuarioDto.nombres,
+        apellidos: createUsuarioDto.apellidos,
+        tipo_documento: createUsuarioDto.tipo_documento,
+        numero_documento: createUsuarioDto.numero_documento,
+        rol: createUsuarioDto.rol,
+        password_hash: createUsuarioDto.password_hash,
+        estado_cuenta: createUsuarioDto.estado_cuenta,
+        fecha_creacion: createUsuarioDto.fecha_creacion,
+        ultimo_acceso: createUsuarioDto.ultimo_acceso,
+        perfil_url: createUsuarioDto.perfil_url,
+        portada_url: createUsuarioDto.portada_url,
+        telefono: createUsuarioDto.telefono,
+        descripcion: createUsuarioDto.descripcion,
       },
     });
 
     return plainToInstance(ResponseUsuarioDto, usuario, {
-      excludeExtraneousValues: true, 
+      excludeExtraneousValues: true,
     });
   }
 
-  findAll() {
-    return this.usuarios;
+  async findAll(): Promise<ResponseUsuarioDto[]> {
+    const usuarios = await this.prismaService.usuario.findMany();
+    return plainToInstance(ResponseUsuarioDto, usuarios, {
+      excludeExtraneousValues: true, // Solo expone lo definido en el DTO
+    });
   }
 
-  findOne(id: string) {
-    return this.usuarios.find(function (usuario) {
-      return usuario.usuario_id === id
+  async findOne(usuario_id: string): Promise<ResponseUsuarioDto> {
+    const usuario = await this.prismaService.usuario.findUnique({
+      where: { usuario_id },
+    });
+
+    if (!usuario) {
+      throw new Error(`Usuario con id ${usuario_id} no encontrado`);
+    }
+
+    return plainToInstance(ResponseUsuarioDto, usuario, {
+      excludeExtraneousValues: true,
+    });
+  }
+
+  async update(usuario_id: string, updateUsuarioDto: UpdateUsuarioDto): Promise<ResponseUsuarioDto> {
+    const usuario = await this.prismaService.usuario.update({
+      where: { usuario_id },
+      data: updateUsuarioDto,
+    });
+
+    return plainToInstance(ResponseUsuarioDto, usuario, {
+      excludeExtraneousValues: true,
+    });
+  }
+
+  async remove(usuario_id: string): Promise<{ message: string }> {
+    await this.prismaService.usuario.delete({
+      where: { usuario_id },
     })
-  }
 
-  update(id: string, updateUsuariosDto: UpdateUsuariosDto) {
-    return `Se ha actualizado el Usuario con el ID: ${id}`;
-  }
-
-  remove(id: string) {
-    this.usuarios = this.usuarios.filter(function (usuario) {
-      return usuario.usuario_id !== id
-    });
+    return { message: `Usuario con ${usuario_id} eliminado exitosamente` };
   }
 }

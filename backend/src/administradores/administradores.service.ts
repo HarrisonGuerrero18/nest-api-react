@@ -1,26 +1,47 @@
+import { PrismaService } from 'src/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { CreateAdministradoreDto } from './dto/create-administradore.dto';
-import { UpdateAdministradoreDto } from './dto/update-administradore.dto';
+import { CreateAdministradorDto } from './dto/create-administradore.dto';
+import { UpdateAdministradorDto } from './dto/update-administradore.dto';
 
 @Injectable()
 export class AdministradoresService {
-  create(createAdministradoreDto: CreateAdministradoreDto) {
-    return 'This action adds a new administradore';
-  }
 
-  findAll() {
-    return `This action returns all administradores`;
-  }
+    constructor(private prismaService: PrismaService) { }
 
-  findOne(id: number) {
-    return `This action returns a #${id} administradore`;
-  }
+    async create(createAdministradorDto: CreateAdministradorDto) {
+        await this.prismaService.administradorSistema.create({
+            data: {
+                administrador_id: createAdministradorDto.administrador_id,
+            }
+        })
+    }
 
-  update(id: number, updateAdministradoreDto: UpdateAdministradoreDto) {
-    return `This action updates a #${id} administradore`;
-  }
+    async findAll() {
+        return this.prismaService.administradorSistema.findMany();
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} administradore`;
-  }
+    async findOne(administrador_id: string) {
+        this.prismaService.administradorSistema.findUnique({
+            where: { administrador_id },
+        });
+
+        if (!administrador_id) {
+            throw new Error(`Administrador con id ${administrador_id} no encontrado`)
+        }
+    }
+
+    async update(administrador_id: string, updateAdministradoreDto: UpdateAdministradorDto) {
+        await this.prismaService.administradorSistema.update({
+            where: { administrador_id },
+            data: updateAdministradoreDto,
+        });
+    }
+
+    async remove(administrador_id: string) {
+        await this.prismaService.administradorSistema.delete({
+            where: { administrador_id },
+        })
+
+        return { message: `Administrador con ${administrador_id} eliminado exitosamente` };
+    }
 }

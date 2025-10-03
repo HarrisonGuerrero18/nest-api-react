@@ -1,15 +1,15 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { AdministradoresService } from './administradores.service';
-import { CreateAdministradoreDto } from './dto/create-administradore.dto';
-import { UpdateAdministradoreDto } from './dto/update-administradore.dto';
+import { CreateAdministradorDto } from './dto/create-administradore.dto';
+import { UpdateAdministradorDto } from './dto/update-administradore.dto';
 
 @Controller('administradores')
 export class AdministradoresController {
-  constructor(private readonly administradoresService: AdministradoresService) {}
+  constructor(private readonly administradoresService: AdministradoresService) { }
 
   @Post()
-  create(@Body() createAdministradoreDto: CreateAdministradoreDto) {
-    return this.administradoresService.create(createAdministradoreDto);
+  create(@Body() createAdministradorDto: CreateAdministradorDto) {
+    return this.administradoresService.create(createAdministradorDto);
   }
 
   @Get()
@@ -17,18 +17,22 @@ export class AdministradoresController {
     return this.administradoresService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.administradoresService.findOne(+id);
+  @Get(':administrador_id')
+  findOne(@Param('administrador_id') administrador_id: string) {
+    return this.administradoresService.findOne(administrador_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdministradoreDto: UpdateAdministradoreDto) {
-    return this.administradoresService.update(+id, updateAdministradoreDto);
+  @Patch(':administrador_id')
+  update(@Param('id') id: string, @Body() updateAdministradorDto: UpdateAdministradorDto) {
+    return this.administradoresService.update(id, updateAdministradorDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.administradoresService.remove(+id);
+  @Delete(':administrador_id')
+  remove(@Param('administrador_id') administrador_id: string) {
+    this.administradoresService.remove(administrador_id);
+    return {
+      succes: true,
+      administardor_elimiando: administrador_id
+    }
   }
 }

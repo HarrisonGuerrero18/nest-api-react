@@ -1,0 +1,32 @@
+meta {
+  name: Registrar en "Usuario"
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8000/usuario
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "prueba",
+    "nombres": "Harrison David",
+    "apellidos": "Guerrero Palacios",
+    "tipo_documento": "cc",
+    "numero_documento": "103242845499",
+    "rol": "administrador",
+    "password_hash": "hash_de_ejemplo",
+    "estado_cuenta": "activo",
+    "perfil_url": "https://i.pinimg.com/1200x/94/56/f3/9456f367c9949edc13d4f26e709078ea.jpg",
+    "portada_url": null,
+    "telefono": "+57 30245955499",
+    "descripcion": "Administrador del sistema principal, encargado de la gestión de usuarios y configuraciones."
+  }
+}
+
+settings {
+  encodeUrl: true
+}

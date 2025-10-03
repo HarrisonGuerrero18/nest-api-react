@@ -1,0 +1,21 @@
+meta {
+  name: Registrar en "AdiministradorSistema"
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8000/administradores
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "administrador_id": "ac2d0cda-a451-4826-8e8c-4d71a25dc455"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

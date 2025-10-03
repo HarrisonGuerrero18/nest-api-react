@@ -8,9 +8,10 @@ import { CoordinadoresModule } from './coordinadores/coordinadores.module';
 import { EstudiantesModule } from './estudiantes/estudiantes.module';
 import { InstitucionesModule } from './instituciones/instituciones.module';
 import { ProgramasModule } from './programas/programas.module';
+import { CarrosModule } from './carros/carros.module';
 
 @Module({
-  imports: [PrismaModule, UsuariosModule, AdministradoresModule, DocentesModule, CoordinadoresModule, EstudiantesModule, InstitucionesModule, ProgramasModule],
+  imports: [PrismaModule, UsuariosModule, AdministradoresModule, DocentesModule, CoordinadoresModule, EstudiantesModule, InstitucionesModule, ProgramasModule, CarrosModule],
   controllers: [AppController],
   providers: [],
 })
